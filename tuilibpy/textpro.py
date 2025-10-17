@@ -47,7 +47,7 @@ def write(text, anchor="left", spacer=" ", width=0):
 
             suffix = ""
         case "center":
-            each = math.floor((realWidth / 2) - len(text))
+            each = math.floor((realWidth - len(text)) / 2)
 
             for _ in range(each):
                 prefix += spacer
@@ -55,4 +55,4 @@ def write(text, anchor="left", spacer=" ", width=0):
             for _ in range(each):
                 suffix += spacer
 
-    sys.stdout.write(f"{prefix}{text}{suffix}")
+    sys.stdout.write(f"{prefix}{text}{suffix}\n")

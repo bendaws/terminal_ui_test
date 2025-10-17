@@ -43,41 +43,44 @@ def write(title, text, width = 80, height=5, anchorTitle = "left", ansiStylingTi
     # Validate arguments
     if not _is(anchorTitle.lower(), "left", "right", "center"):
         return
+
+    _title = str.replace(title, "\n", "")
+    _text = str.replace(text, "\t", "    ")
     
     writtenHeight = 0
     
-    if len(title) > (width - 4):
+    if len(_title) > (width - 4):
         # Shorten the title to fit width constraints
         allowedCharacters = width - 7
-        sys.stdout.write(f"= {ansiStylingTitle}{title[:allowedCharacters]}\033[0m... =\n")
+        sys.stdout.write(f"= {ansiStylingTitle}{_title[:allowedCharacters]}\033[0m... =\n")
     else:
         # Good enough
         # We also apply anchoring settings here
 
         match anchorTitle.lower():
             case "left":
-                sys.stdout.write(f"= {title} ")
+                sys.stdout.write(f"= {ansiStylingTitle}{_title}\033[0m ")
 
                 # Fill in the whitespace
-                for _ in range((width - 4) - len(title)):
+                for _ in range((width - 4) - len(_title)):
                     sys.stdout.write("=")
                 
                 # We're done
                 sys.stdout.write("=\n")
             case "right":
                 # This is the same as "left", but in reverse
-                for _ in range((width - 4) - len(title)):
+                for _ in range((width - 4) - len(_title)):
                     sys.stdout.write("=")
                 
-                sys.stdout.write(f" {ansiStylingTitle}{title}\033[0m =\n")
+                sys.stdout.write(f" {ansiStylingTitle}{_title}\033[0m =\n")
             case "center":
-                eachSide = math.floor(((width) - len(title)) / 2) - 2
+                eachSide = math.floor(((width) - len(_title)) / 2) - 2
                 writing = "="
 
                 for _ in range(eachSide):
                     writing += "="
                 
-                writing += f" {ansiStylingTitle}{title}\033[0m "
+                writing += f" {ansiStylingTitle}{_title}\033[0m "
 
                 for _ in range(eachSide):
                     writing += "="
@@ -90,9 +93,9 @@ def write(title, text, width = 80, height=5, anchorTitle = "left", ansiStylingTi
     
     writtenHeight += 1
     
-    if str.find(text, "\n"):
+    if str.find(_text, "\n"):
         # Text has newlines so we will respect those constraints
-        for subs in str.split(text, "\n"):
+        for subs in str.split(_text, "\n"):
             # Check fitting
             if len(subs) > width - 4:
                 # Not enough space
@@ -120,7 +123,7 @@ def write(title, text, width = 80, height=5, anchorTitle = "left", ansiStylingTi
             writtenHeight += 1
     else:
         # Do it yourself buddy
-        for subs in split_string_by_chars(text, width - 4):
+        for subs in split_string_by_chars(_text, width - 4):
             if len(subs) == width - 4:
                 # no scaling needed
                 sys.stdout.write(f"| {ansiStylingText}{subs}\033[0m")
